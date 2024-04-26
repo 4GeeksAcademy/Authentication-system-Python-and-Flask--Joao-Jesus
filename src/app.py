@@ -10,6 +10,8 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask_jwt_extended import JWTManager, create_access_token
+from api.models import User
 
 # from models import Person
 
@@ -18,6 +20,10 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+# Authentication system
+app.config["JWT_SECRET_KEY"] = "joao-secret"  
+jwt = JWTManager(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -66,6 +72,20 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+app.route('/authenticate', methods=['POST'])
+def create_user():
+    email = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    user = User.query.filter_by(email = email, password = password).first()
+
+    if user is None:
+        return jsonify({"msg": "Wrong email or password"}), 401
+    
+    jwt_token = create_access_token(identity = user.id)
+    return jsonify({ "token": jwt_token, "user_id": user.id })
+
 
 
 # this only runs if `$ python src/main.py` is executed
