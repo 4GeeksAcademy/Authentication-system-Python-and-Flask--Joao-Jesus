@@ -10,7 +10,7 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from api.models import User
 
 # from models import Person
@@ -65,26 +65,11 @@ def sitemap():
 # any other endpoint will try to serve it like a static file
 
 
-@app.route('/<path:path>', methods=['GET'])
-def serve_any_other_file(path):
-    if not os.path.isfile(os.path.join(static_file_dir, path)):
-        path = 'index.html'
-    response = send_from_directory(static_file_dir, path)
-    response.cache_control.max_age = 0  # avoid cache memory
-    return response
 
-app.route('/authenticate', methods=['POST'])
-def create_user():
-    email = request.json.get("username", None)
-    password = request.json.get("password", None)
 
-    user = User.query.filter_by(email = email, password = password).first()
 
-    if user is None:
-        return jsonify({"msg": "Wrong email or password"}), 401
-    
-    jwt_token = create_access_token(identity = user.id)
-    return jsonify({ "token": jwt_token, "user_id": user.id })
+
+
 
 
 
