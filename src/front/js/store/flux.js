@@ -22,9 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getMessage: async () => {
-				
-
-					const myToken = localStorage.getItem(' jwt-token')
+				const myToken = localStorage.getItem('jwt-token')
 
 					fetch(process.env.BACKEND_URL + "/api/hello", {
 						method: 'GET',

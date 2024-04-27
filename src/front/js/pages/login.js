@@ -5,10 +5,12 @@ const Login = () => {
 
         const [email, setEmail] = useState("")
         const [password, setPassword] = useState("")
-
+        const [error, setError] = useState("");
         const navigate = useNavigate();
+        
 
-        const onSubmit = async () => {
+        const onSubmit = async (e) => {
+          e.preventDefault();
             if (email === '' || password === '') {
               alert(' Email or password should not be empty')
             }else {
@@ -26,7 +28,7 @@ const Login = () => {
                   console.log('Response from Backend', resAsJson);
                   localStorage.setItem('jwt-token', resAsJson.token)
                   navigate('/')
-                  
+
                 }).catch((err) => {
                   console.error('Something wrong when calling API', err)
                 })
@@ -39,7 +41,7 @@ const Login = () => {
         <div className="container">
           <form className="form">
             <div className="form-group">
-            <label form="exampleInputEmail1">Email address</label>
+            <label className="label1" htmlFor="exampleInputEmail1">Email address</label>
             <input type="email" 
             className="form-control" 
             id="exampleInputEmail1" 
@@ -51,7 +53,7 @@ const Login = () => {
          
         </div>
         <div className="form-group">
-          <label form="exampleInputPassword1">Password</label>
+          <label className="labe2" htmlFor="exampleInputPassword1">Password</label>
           <input type="password" 
           className="form-control" 
           id="exampleInputPassword1" 
