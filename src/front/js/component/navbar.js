@@ -1,7 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export const Navbar = () => {
+
+		const navigate = useNavigate()
+
+		const onLogout = () => {
+			localStorage.removeItem('jwt-token')
+			navigate('/log-in')
+		}
+
 	return (
 		<nav className="navbar navbar-light bg-light">
 			<div className="container">
@@ -9,9 +18,9 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
 				</Link>
 				<div className="ml-auto">
-					<Link to="/demo">
-						<button className="btn btn-primary">Check the Context in action</button>
-					</Link>
+
+						<button className="btn btn-primary" onClick={onLogout}>Logout</button>
+					
 				</div>
 			</div>
 		</nav>
